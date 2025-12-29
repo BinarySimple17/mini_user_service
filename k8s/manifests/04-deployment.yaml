@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-service
+  labels:
+    app: users-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users-service
+  template:
+    metadata:
+      labels:
+        app: users-service
+    spec:
+      containers:
+        - name: users-service
+          image: binarysimple/simple-users-service:0.0.3
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kubernetes
+            - name: DATASOURCE_URL
+              value: jdbc:postgresql://postgres-postgresql:5432/usersdb
+            - name: DATASOURCE_USERNAME
+              value: app_user
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: password
+            - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+              value: file:/app/config/
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+              readOnly: true
+          livenessProbe: #Liveness проба
+            httpGet:
+              path: /actuator/health/
+              port: 8080
+            initialDelaySeconds: 45
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: config-volume
+          configMap:
+            name: users-service-config
+            items:
+              - key: application-kubernetes.yaml
+                path: application-kubernetes.yaml

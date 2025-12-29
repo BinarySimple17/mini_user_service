@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migrate
+  labels:
+    app: db-migrate
+spec:
+  # Не перезапускаем при успехе, только при ошибках 4 раза
+  backoffLimit: 4
+  template:
+    metadata:
+      labels:
+        app: users-service
+        job: db-migrate
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: db-migrate
+          image: binarysimple/simple-users-service:0.0.3  # тот же образ
+          workingDir: /application  # здесь лежит app.jar
+          command: ["java"]
+          args:
+            - "-Dspring.profiles.active=job"
+            - "-Dspring.config.location=classpath:/;file:/application/config/"
+            - "-Dspring.main.web-application-type=none"  # чтобы не запускать веб-сервер
+#            - "-Dlogging.level.org.springframework.boot.autoconfigure=DEBUG"
+#            - "-Dlogging.level.org.springframework.cloud=DEBUG"
+            - "-jar"
+            - "app.jar"
+          env:
+            - name: DATASOURCE_URL
+              value: jdbc:postgresql://postgres-postgresql:5432/usersdb
+            - name: DATASOURCE_USERNAME
+              value: app_user
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: password
+          volumeMounts:
+            - name: config-volume
+              mountPath: /application/config
+              readOnly: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: users-service-config
+            items:
+              - key: application-job.yaml
+                path: application-job.yaml
+
+      terminationGracePeriodSeconds: 30 #время на завершение работы контейнера для отладки

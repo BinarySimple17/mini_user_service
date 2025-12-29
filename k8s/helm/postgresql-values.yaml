@@ -1,0 +1,23 @@
+# values.yaml для PostgreSQL (bitnami/postgresql)
+
+auth:
+  enablePostgresPasswordRotation: false
+  username: app_user
+  existingSecret: db-secret
+  existingSecretPasswordKey: password
+  database: usersdb
+  createSecret: false
+  enablePostgresUser: true
+
+primary:
+
+  service:
+    type: ClusterIP
+    port: 5432
+
+  persistence:
+    enabled: true
+    size: 2Gi
+    storageClass: standard
+
+architecture: "standalone"
