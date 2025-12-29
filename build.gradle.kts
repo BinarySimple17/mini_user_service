@@ -9,7 +9,7 @@ springBoot {
 }
 
 group = "ru.binarysimple"
-version = "0.0.4-SNAPSHOT"
+version = "0.0.5"
 description = "Users service"
 
 java {
@@ -47,6 +47,12 @@ dependencies {
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.0")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("io.micrometer:micrometer-registry-prometheus")
+}
+
+tasks.register("printVersion") {
+    doLast {
+        println(project.version)
+    }
 }
 
 tasks.withType<Test> {
