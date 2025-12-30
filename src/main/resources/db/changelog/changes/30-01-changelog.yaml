@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1767087422623-1
+      author: Professional (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - modifyDataType:
+            columnName: username
+            newDataType: VARCHAR(256)
+            tableName: users
+  - changeSet:
+      id: 1767087422623-3
+      author: Professional (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: username
+            indexName: idx_username
+            tableName: users
+            unique: true
+
