@@ -1,10 +1,12 @@
 package ru.binarysimple.users.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.binarysimple.users.dto.CreateUserDto;
 import ru.binarysimple.users.dto.UserDto;
 import ru.binarysimple.users.filter.UserFilter;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -17,6 +19,7 @@ public interface UserService {
 
     /**
      * Получить одного пользователя по ID.
+     *
      * @throws ru.binarysimple.users.exception.EntityNotFoundException если не найден
      */
     UserDto getOne(Long id);
@@ -34,15 +37,16 @@ public interface UserService {
     /**
      * Частично обновить пользователя по ID (патч).
      */
-    UserDto patch(Long id, com.fasterxml.jackson.databind.JsonNode patchNode) throws IOException;
+    UserDto patch(Long id, JsonNode patchNode) throws IOException;
 
     /**
      * Частично обновить несколько пользователей.
      */
-    List<Long> patchMany(List<Long> ids, com.fasterxml.jackson.databind.JsonNode patchNode) throws IOException;
+    List<Long> patchMany(List<Long> ids, JsonNode patchNode) throws IOException;
 
     /**
      * Удалить пользователя по ID.
+     *
      * @return DTO удалённого пользователя (или null, если не найден)
      */
     UserDto delete(Long id);
@@ -51,4 +55,10 @@ public interface UserService {
      * Удалить несколько пользователей по ID.
      */
     void deleteMany(List<Long> ids);
+
+    UserDto deleteByUsername(String username);
+
+    UserDto getByUsername(String username);
+
+    UserDto updateByUsername(String username, JsonNode patchNode) throws IOException;
 }
