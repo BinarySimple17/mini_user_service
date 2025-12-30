@@ -19,20 +19,10 @@ public class UserController {
 
     private final UserService userService;
 
-//    @GetMapping
-//    public PagedModel<UserDto> getAll(@ParameterObject @ModelAttribute UserFilter filter, @ParameterObject Pageable pageable) {
-//        Page<UserDto> userDtos = userService.getAll(filter, pageable);
-//        return new PagedModel<>(userDtos);
-//    }
 
-    @GetMapping(params = {"id"})
-    public UserDto getOne(@RequestParam Long id) {
-        return userService.getOne(id);
-    }
-
-//    @GetMapping("/by-ids")
-//    public List<UserDto> getMany(@RequestParam List<Long> ids) {
-//        return userService.getMany(ids);
+//    @GetMapping(params = {"id"})
+//    public UserDto getOne(@RequestParam Long id) {
+//        return userService.getOne(id);
 //    }
 
     @PostMapping
@@ -40,23 +30,29 @@ public class UserController {
         return userService.create(dto);
     }
 
-    @PutMapping(params = {"id"})
-    public UserDto put(@RequestParam Long id, @RequestBody JsonNode patchNode) throws IOException {
-        return userService.patch(id, patchNode);
-    }
-
-//    @PatchMapping
-//    public List<Long> patchMany(@RequestParam @Valid List<Long> ids, @RequestBody JsonNode patchNode) throws IOException {
-//        return userService.patchMany(ids, patchNode);
+//    @PutMapping(params = {"id"})
+//    public UserDto put(@RequestParam Long id, @RequestBody JsonNode patchNode) throws IOException {
+//        return userService.patch(id, patchNode);
 //    }
 
-    @DeleteMapping(params = {"id"})
-    public UserDto delete(@RequestParam Long id) {
-        return userService.delete(id);
+
+//    @DeleteMapping(params = {"id"})
+//    public UserDto delete(@RequestParam Long id) {
+//        return userService.delete(id);
+//    }
+
+    @GetMapping(params = {"username"})
+    public UserDto getOneByUsername(@RequestParam String username) {
+        return userService.getByUsername(username);
     }
 
-//    @DeleteMapping
-//    public void deleteMany(@RequestParam List<Long> ids) {
-//        userService.deleteMany(ids);
-//    }
+    @PutMapping(params = {"username"})
+    public UserDto updateByUsername(@RequestParam String username, @RequestBody JsonNode patchNode) throws IOException {
+        return userService.updateByUsername(username, patchNode);
+    }
+
+    @DeleteMapping(params = {"username"})
+    public UserDto delete(@RequestParam String username) {
+        return userService.deleteByUsername(username);
+    }
 }

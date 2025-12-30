@@ -10,13 +10,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.binarysimple.users.dto.CreateUserDto;
+import ru.binarysimple.users.dto.UserDto;
 import ru.binarysimple.users.exception.EntityNotFoundException;
 import ru.binarysimple.users.filter.UserFilter;
-import ru.binarysimple.users.dto.UserDto;
 import ru.binarysimple.users.mappers.UserMapper;
 import ru.binarysimple.users.model.User;
 import ru.binarysimple.users.repository.UserRepository;
-
 
 import java.io.IOException;
 import java.util.Collection;
@@ -70,12 +69,13 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Entity with id `%s` not found".formatted(id)));
 
-        UserDto userDto = userMapper.toUserDto(user);
-        objectMapper.readerForUpdating(userDto).readValue(patchNode);
-        userMapper.updateWithNull(userDto, user);
-
-        User resultUser = userRepository.save(user);
-        return userMapper.toUserDto(resultUser);
+        return updateUser(user, patchNode);
+//        UserDto userDto = userMapper.toUserDto(user);
+//        objectMapper.readerForUpdating(userDto).readValue(patchNode);
+//        userMapper.updateWithNull(userDto, user);
+//
+//        User resultUser = userRepository.save(user);
+//        return userMapper.toUserDto(resultUser);
     }
 
     @Override
@@ -106,5 +106,41 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteMany(List<Long> ids) {
         userRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public UserDto getByUsername(String username) {
+
+        User user = userRepository.findUserByUsername(username).orElse(null);
+
+        return userMapper.toUserDto(user);
+    }
+
+    @Override
+    public UserDto updateByUsername(String username, JsonNode patchNode) throws IOException {
+
+        User user = userRepository.findUserByUsername(username).orElseThrow(() ->
+                new EntityNotFoundException("Entity with username `%s` not found".formatted(username)));
+
+        return updateUser(user, patchNode);
+    }
+
+    private UserDto updateUser(User user, JsonNode patchNode) throws IOException {
+        UserDto userDto = userMapper.toUserDto(user);
+        objectMapper.readerForUpdating(userDto).readValue(patchNode);
+        userMapper.updateWithNull(userDto, user);
+
+        User resultUser = userRepository.save(user);
+        return userMapper.toUserDto(resultUser);
+    }
+
+    @Override
+    public UserDto deleteByUsername(String username) {
+        User user = userRepository.findUserByUsername(username).orElse(null);
+
+        if (user != null) {
+            userRepository.delete(user);
+        }
+        return userMapper.toUserDto(user);
     }
 }
