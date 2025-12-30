@@ -1,12 +1,18 @@
 package ru.binarysimple.users.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "users")
+@Table(
+        name = "users",
+        indexes = @Index(name = "idx_username", columnList = "username")
+)
 @Getter
 @Setter
 @NoArgsConstructor
