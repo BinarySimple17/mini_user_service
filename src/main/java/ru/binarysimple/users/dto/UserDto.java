@@ -3,6 +3,7 @@ package ru.binarysimple.users.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.Value;
+import ru.binarysimple.users.model.Status;
 
 /**
  * DTO for {@link ru.binarysimple.users.model.User}
@@ -17,4 +18,5 @@ public class UserDto {
     @Email
     String email;
     String phone;
+    Status status;
 }

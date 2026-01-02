@@ -42,7 +42,7 @@ public interface UserService {
     /**
      * Частично обновить несколько пользователей.
      */
-    List<Long> patchMany(List<Long> ids, JsonNode patchNode) throws IOException;
+//    List<Long> patchMany(List<Long> ids, JsonNode patchNode) throws IOException;
 
     /**
      * Удалить пользователя по ID.
@@ -61,4 +61,6 @@ public interface UserService {
     UserDto getByUsername(String username);
 
     UserDto updateByUsername(String username, JsonNode patchNode) throws IOException;
+
+    UserDto setInactiveByUsername(String username) throws IOException;
 }

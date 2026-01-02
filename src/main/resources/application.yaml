@@ -23,8 +23,8 @@ spring:
     show-sql: false
 
   liquibase:
-#    change-log: classpath:db/changelog/db.changelog-master.yaml
-    enabled: false
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
 
 server:
   port: 8080

@@ -58,11 +58,18 @@ public class UserController {
         return userService.updateByUsername(username, patchNode);
     }
 
+    /**
+     * todo через брокера событий дергать авторизацию и блокировать учетку тоже
+     * @param currentUsername
+     * @param username
+     * @return
+     * @throws IOException
+     */
     @DeleteMapping(params = {"username"})
-    public UserDto delete(@RequestHeader("X-Username") String currentUsername, @RequestParam String username) {
+    public UserDto delete(@RequestHeader("X-Username") String currentUsername, @RequestParam String username) throws IOException {
         if (!currentUsername.equals(username)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
-        return userService.deleteByUsername(username);
+        return userService.setInactiveByUsername(username);
     }
 }

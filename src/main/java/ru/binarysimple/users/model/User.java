@@ -39,4 +39,9 @@ public class User {
 
     @Column(nullable = false)
     private String phone;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status;
 }
+
