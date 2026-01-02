@@ -5,6 +5,7 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 import ru.binarysimple.users.dto.CreateUserDto;
+import ru.binarysimple.users.dto.UpdateUserDto;
 import ru.binarysimple.users.dto.UserDto;
 import ru.binarysimple.users.model.User;
 
@@ -14,7 +15,10 @@ public interface UserMapper {
 
     UserDto toUserDto(User user);
 
+    UpdateUserDto toUpdateUserDto(User user);
+
     User toNewEntity(CreateUserDto user);
 
-    User updateWithNull(UserDto userDto, @MappingTarget User user);
+    User updateWithNull(UpdateUserDto userDto, @MappingTarget User user);
+//    User updateWithNull(UserDto userDto, @MappingTarget User user);
 }

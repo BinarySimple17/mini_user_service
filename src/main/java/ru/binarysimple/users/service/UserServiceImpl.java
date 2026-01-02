@@ -10,10 +10,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.binarysimple.users.dto.CreateUserDto;
+import ru.binarysimple.users.dto.UpdateUserDto;
 import ru.binarysimple.users.dto.UserDto;
 import ru.binarysimple.users.exception.EntityNotFoundException;
 import ru.binarysimple.users.filter.UserFilter;
 import ru.binarysimple.users.mappers.UserMapper;
+import ru.binarysimple.users.model.Status;
 import ru.binarysimple.users.model.User;
 import ru.binarysimple.users.repository.UserRepository;
 
@@ -78,21 +80,22 @@ public class UserServiceImpl implements UserService {
 //        return userMapper.toUserDto(resultUser);
     }
 
-    @Override
-    public List<Long> patchMany(List<Long> ids, JsonNode patchNode) throws IOException {
-        Collection<User> users = userRepository.findAllById(ids);
-
-        for (User user : users) {
-            UserDto userDto = userMapper.toUserDto(user);
-            objectMapper.readerForUpdating(userDto).readValue(patchNode);
-            userMapper.updateWithNull(userDto, user);
-        }
-
-        List<User> resultUsers = userRepository.saveAll(users);
-        return resultUsers.stream()
-                .map(User::getId)
-                .toList();
-    }
+//    @Override
+//    public List<Long> patchMany(List<Long> ids, JsonNode patchNode) throws IOException {
+//        Collection<User> users = userRepository.findAllById(ids);
+//
+//        for (User user : users) {
+//            UpdateUserDto userDto = userMapper.toUpdateUserDto(user);
+////            UserDto userDto = userMapper.toUserDto(user);
+//            objectMapper.readerForUpdating(userDto).readValue(patchNode);
+//            userMapper.updateWithNull(userDto, user);
+//        }
+//
+//        List<User> resultUsers = userRepository.saveAll(users);
+//        return resultUsers.stream()
+//                .map(User::getId)
+//                .toList();
+//    }
 
     @Override
     public UserDto delete(Long id) {
@@ -126,8 +129,10 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserDto updateUser(User user, JsonNode patchNode) throws IOException {
-        UserDto userDto = userMapper.toUserDto(user);
+        UpdateUserDto userDto = userMapper.toUpdateUserDto(user);
+//        UserDto userDto = userMapper.toUserDto(user);
         objectMapper.readerForUpdating(userDto).readValue(patchNode);
+//        userMapper.updateWithNull(userDto, user);
         userMapper.updateWithNull(userDto, user);
 
         User resultUser = userRepository.save(user);
@@ -140,6 +145,21 @@ public class UserServiceImpl implements UserService {
 
         if (user != null) {
             userRepository.delete(user);
+        }
+        return userMapper.toUserDto(user);
+    }
+
+    @Override
+    public UserDto setInactiveByUsername(String username) throws IOException {
+        return setStatusByUsername(username, Status.INACTIVE);
+    }
+
+    private UserDto setStatusByUsername(String username, Status status) {
+        User user = userRepository.findUserByUsername(username).orElse(null);
+
+        if (user != null) {
+            user.setStatus(status);
+            userRepository.save(user);
         }
         return userMapper.toUserDto(user);
     }

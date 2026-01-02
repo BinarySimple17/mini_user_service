@@ -59,10 +59,10 @@ public class UserController {
     }
 
     @DeleteMapping(params = {"username"})
-    public UserDto delete(@RequestHeader("X-Username") String currentUsername, @RequestParam String username) {
+    public UserDto delete(@RequestHeader("X-Username") String currentUsername, @RequestParam String username) throws IOException {
         if (!currentUsername.equals(username)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
-        return userService.deleteByUsername(username);
+        return userService.setInactiveByUsername(username);
     }
 }

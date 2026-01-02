@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Value;
+import ru.binarysimple.users.model.Status;
 import ru.binarysimple.users.model.User;
 
 /**
@@ -20,4 +21,5 @@ public class UpdateUserDto {
     @NotEmpty
     String email;
     String phone;
+    Status status;
 }
