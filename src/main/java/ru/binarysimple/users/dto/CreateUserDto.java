@@ -11,18 +11,26 @@ import ru.binarysimple.users.model.User;
 /**
  * DTO for {@link User}
  */
-@Data
 @NoArgsConstructor
+@Data
 public class CreateUserDto {
+
     @NotNull
     @Size(max = 256)
     @NotEmpty
     String username;
+
+    @NotNull
     String firstName;
+
+    @NotNull
     String lastName;
+
     @NotNull
     @Email
     @NotEmpty
     String email;
+
+    @NotNull
     String phone;
 }
