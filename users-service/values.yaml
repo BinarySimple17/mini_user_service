@@ -88,7 +88,7 @@ database:
     gracePeriod: 30
     debug: false # включить debug логи
     useConfigMap: true # использовать ConfigMap
-    changeVersion: "27-01-changelog" # версия миграции
+    changeVersion: "20260102-changelog" # версия миграции
 
 postgresql:
   enabled: true
