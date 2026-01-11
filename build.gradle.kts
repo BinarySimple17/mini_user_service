@@ -9,7 +9,7 @@ springBoot {
 }
 
 group = "ru.binarysimple"
-version = "0.0.5"
+version = "0.0.6"
 description = "Users service"
 
 java {
@@ -33,7 +33,7 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-//	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 //	implementation("org.springframework.security:spring-security-test")
 	implementation(libs.liquibase.core)
 	implementation(libs.jakarta.validation.api)

@@ -21,29 +21,19 @@ public class UserController {
 
     private final UserService userService;
 
-//    @GetMapping(params = {"id"})
-//    public UserDto getOne(@RequestParam Long id) {
-//        return userService.getOne(id);
-//    }
-
     @PostMapping
-    public UserDto create(@RequestBody @Valid CreateUserDto dto) {
+    public UserDto create(@RequestHeader("X-Username") String currentUsername, @RequestBody @Valid CreateUserDto dto) {
+        // здесь есть проверка x-username потому что запрос приходит от gateway, который валидировал токен и заполнил x-username
+        if (!currentUsername.equals(dto.getUsername())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied, wrong username");
+        }
         return userService.create(dto);
     }
 
-//    @PutMapping(params = {"id"})
-//    public UserDto put(@RequestParam Long id, @RequestBody JsonNode patchNode) throws IOException {
-//        return userService.patch(id, patchNode);
-//    }
-
-
-//    @DeleteMapping(params = {"id"})
-//    public UserDto delete(@RequestParam Long id) {
-//        return userService.delete(id);
-//    }
 
     @GetMapping(params = {"username"})
     public UserDto getOneByUsername(@RequestHeader("X-Username") String currentUsername, @RequestParam String username) {
+
         if (!currentUsername.equals(username)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
@@ -60,6 +50,7 @@ public class UserController {
 
     /**
      * todo через брокера событий дергать авторизацию и блокировать учетку тоже
+     *
      * @param currentUsername
      * @param username
      * @return
