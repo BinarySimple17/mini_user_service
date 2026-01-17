@@ -2,9 +2,11 @@ package ru.binarysimple.users.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import ru.binarysimple.users.dto.CreateUserDto;
 import ru.binarysimple.users.dto.UpdateUserDto;
 import ru.binarysimple.users.dto.UserDto;
+import ru.binarysimple.users.event.UserCreatedEvent;
 import ru.binarysimple.users.exception.EntityNotFoundException;
 import ru.binarysimple.users.filter.UserFilter;
 import ru.binarysimple.users.mappers.UserMapper;
@@ -26,6 +29,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -33,6 +37,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public Page<UserDto> getAll(UserFilter filter, Pageable pageable) {
@@ -63,6 +68,12 @@ public class UserServiceImpl implements UserService {
 
         User user = userMapper.toNewEntity(dto);
         User resultUser = userRepository.save(user);
+
+        // публикуем событие - оно будет обработано ПОСЛЕ коммита
+        // в этом событии топравка сообщения в кафку
+        // только для transactional
+        eventPublisher.publishEvent(new UserCreatedEvent(resultUser, Class.class.getName()));
+
         return userMapper.toUserDto(resultUser);
     }
 
