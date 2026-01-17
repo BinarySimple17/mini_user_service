@@ -1,0 +1,19 @@
+package ru.binarysimple.users.kafka;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import ru.binarysimple.users.model.NotificationType;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class UserEvent {
+
+    private String username;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
+    private NotificationType notificationType;
+}

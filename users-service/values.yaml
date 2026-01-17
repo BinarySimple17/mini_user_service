@@ -136,3 +136,13 @@ postgresql-exporter:
     scrapeTimeout: 10s
     scheme: http
     labels: {}
+
+endpoints:
+  apiGatewayRName: "hw6-api"
+  apiGatewayHost: "gateway-service"
+  apiGatewaySpace: "default"
+  apiGatewayPort: "8080"
+  kafkaRName: ""
+  kafkaHost: "kafka"
+  kafkaSpace: "default"
+  kafkaPort: "9092"

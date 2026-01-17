@@ -23,6 +23,17 @@ data:
       
       liquibase:
         enabled: false
+    
+      kafka:
+        bootstrap-servers: {{ .Values.endpoints.kafkaHost }}.{{ .Values.endpoints.kafkaSpace }}.svc.cluster.local:{{ .Values.endpoints.kafkaPort }}
+        properties:
+          security.protocol: SASL_PLAINTEXT
+          sasl.mechanism: PLAIN
+          sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="user1" password="${KAFKA_PASSWORD}";
+
+        producer:
+          key-serializer: org.apache.kafka.common.serialization.StringSerializer
+          value-serializer: org.springframework.kafka.support.serializer.JsonSerializer     
       
       springdoc:
         api-docs:

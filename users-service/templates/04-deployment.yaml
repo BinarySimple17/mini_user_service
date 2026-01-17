@@ -68,6 +68,11 @@ spec:
                   key: {{ .Values.database.passwordKey }}
             - name: SPRING_CONFIG_ADDITIONAL_LOCATION
               value: file:/app/config/
+            - name: KAFKA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-secret
+                  key: client-passwords
           volumeMounts:
             - name: config-volume
               mountPath: /app/config

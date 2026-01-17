@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import ru.binarysimple.users.filter.UserAuthFilter;
@@ -34,8 +35,7 @@ public class WebSecurityConfiguration {
                 ).permitAll());
         http.headers(Customizer.withDefaults());
         http.anonymous(Customizer.withDefaults());
-//        http.csrf(Customizer.withDefaults());
-        http.csrf(csrf -> csrf.disable());  // Отключаем CSRF для API
+        http.csrf(AbstractHttpConfigurer::disable);  // Отключаем CSRF для API
 
         configureFilters(http);
 
@@ -43,7 +43,6 @@ public class WebSecurityConfiguration {
     }
 
     private void configureFilters(HttpSecurity http) {
-        http
-                .addFilterBefore(userAuthFilter(), AuthorizationFilter.class);
+        http.addFilterBefore(userAuthFilter(), AuthorizationFilter.class);
     }
 }
