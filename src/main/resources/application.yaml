@@ -1,9 +1,12 @@
+server:
+  port: 8100
+
 spring:
   application:
     name: users-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5434/${POSTGRES_DB:usersdb}
+    url: jdbc:postgresql://localhost:5440/${POSTGRES_DB:usersdb}
     username: ${POSTGRES_USER:app_user}
     password: ${POSTGRES_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
@@ -16,6 +19,7 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
+        default_schema: user_db
         format_sql: true
         jdbc:
           lob:
@@ -24,6 +28,8 @@ spring:
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+    liquibase-schema: public
+    default-schema: user_db
     enabled: true
 
   kafka:
@@ -38,14 +44,12 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
-server:
-  port: 8080
-
 logging:
   level:
     ru.binarysimple: INFO
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
+#    liquibase: DEBUG
 #    org.springframework.web: DEBUG
 #    org.springdoc: DEBUG
 #    io.swagger: DEBUG
